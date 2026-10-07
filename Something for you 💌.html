@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Something for you 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,500&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#2a0a1f;--bg2:#6b1a45;--pink:#ff5c8a;--soft:#ffd6e3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden}
+body{background:radial-gradient(circle at 30% 20%,var(--bg2),var(--bg1) 70%);color:#fff;font-family:Poppins,system-ui,sans-serif;text-align:center}
+h1,h2,.q{font-family:'Playfair Display',Georgia,serif}
+.scene{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:18px;z-index:2}
+.scene.on{display:flex;animation:in .8s ease}
+@keyframes in{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+h1{font-size:clamp(28px,7vw,48px);font-style:italic}
+.sub{font-weight:300;color:var(--soft);max-width:420px}
+.opts{display:flex;flex-direction:column;gap:12px;width:min(340px,100%)}
+.opt,.btn{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);backdrop-filter:blur(8px);color:#fff;font:500 16px Poppins,sans-serif;padding:15px 20px;border-radius:50px;cursor:pointer;transition:.25s}
+.opt:hover{background:rgba(255,255,255,.18);transform:translateY(-2px)}
+.shake{animation:sh .4s}
+@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+#hint{min-height:24px;color:var(--pink);font-size:14px}
+.fade{opacity:0;transition:opacity 1.5s}.fade.v{opacity:1}
+.q{font-size:clamp(34px,10vw,76px);font-weight:600;line-height:1.1;color:#fff;text-shadow:0 0 30px var(--pink)}
+.q span{display:inline-block;opacity:0;transform:scale(5) rotate(-10deg)}
+.q span.p{animation:pop .5s forwards}
+@keyframes pop{to{opacity:1;transform:none}}
+#flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:9}
+#flash.go{animation:fl .6s}
+@keyframes fl{0%{opacity:.9}100%{opacity:0}}
+.row{display:flex;gap:16px;align-items:center;justify-content:center;min-height:90px;opacity:0;transition:opacity 1s}
+.row.v{opacity:1}
+#yes{background:var(--pink);border:none;font-size:20px;padding:16px 38px;box-shadow:0 0 30px var(--pink);transition:transform .2s}
+#no{position:relative;transition:.15s}
+.h{position:fixed;pointer-events:none;z-index:1;animation:fly linear forwards}
+@keyframes fly{to{transform:translateY(-110vh) rotate(40deg);opacity:0}}
+.burst{position:fixed;pointer-events:none;z-index:8;animation:b 1.2s ease-out forwards}
+@keyframes b{to{transform:translate(var(--x),var(--y)) scale(.4);opacity:0}}
+</style></head><body>
+<div id="flash"></div>
+
+<div class="scene on" id="s1">
+ <h1>Hey you… 👀</h1>
+ <p class="sub">I made something just for you. What do you think this is?</p>
+ <div class="opts">
+  <button class="opt" data-w="A virus? Relax, I'd never 😂 Try again.">🦠 A virus</button>
+  <button class="opt" data-w="Hmm, close but think softer… 🤭">📝 A survey</button>
+  <button class="opt" data-go="1">🎁 Something special</button>
+  <button class="opt" data-w="Not even a little bit 😌 Guess again!">🤖 A scam</button>
+ </div>
+ <div id="hint"></div>
+</div>
+
+<div class="scene" id="s2">
+ <h1 class="fade" id="a">Taonanyasha would like to ask you something…</h1>
+ <p class="sub fade" id="b">Take a breath. Ready?</p>
+ <div class="q" id="q" style="display:none"></div>
+ <div class="row" id="row">
+  <button class="btn" id="yes">YES 💖</button>
+  <button class="btn" id="no">No</button>
+ </div>
+</div>
+
+<div class="scene" id="s3">
+ <h1 style="font-size:clamp(40px,12vw,80px)">She said YES! 🥹💖</h1>
+ <p class="sub">You just made Taonanyasha the happiest person alive. Now go tell him — he's probably already smiling at his phone. 💌</p>
+</div>
+
+<script>
+const $=id=>document.getElementById(id), E=['💖','💕','✨','🌸','💗'];
+function show(id){document.querySelectorAll('.scene').forEach(s=>s.classList.remove('on'));$(id).classList.add('on')}
+function heart(){const h=document.createElement('div');h.className='h';h.textContent=E[Math.random()*5|0];
+ h.style.cssText+=`left:${Math.random()*100}vw;top:100vh;font-size:${14+Math.random()*26}px;opacity:.5;animation-duration:${6+Math.random()*7}s`;
+ document.body.appendChild(h);setTimeout(()=>h.remove(),13000)}
+setInterval(heart,500);
+function burst(n){for(let i=0;i<n;i++){const b=document.createElement('div');b.className='burst';b.textContent=E[i%5];
+ const a=Math.random()*6.28,d=120+Math.random()*320;
+ b.style.cssText+=`left:50%;top:50%;font-size:${18+Math.random()*26}px;--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d}px`;
+ document.body.appendChild(b);setTimeout(()=>b.remove(),1300)}}
+let tries=0;
+document.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{
+ if(o.dataset.go){burst(20);setTimeout(()=>{show('s2');start()},500)}
+ else{$('hint').textContent=o.dataset.w;o.classList.remove('shake');void o.offsetWidth;o.classList.add('shake')}});
+function start(){
+ setTimeout(()=>$('a').classList.add('v'),200);
+ setTimeout(()=>$('b').classList.add('v'),2200);
+ setTimeout(()=>{$('a').style.display=$('b').style.display='none';$('flash').classList.add('go');
+  const q=$('q');q.style.display='block';
+  'WILL YOU BE MY GIRLFRIEND?'.split(' ').forEach((w,i)=>{const s=document.createElement('span');s.textContent=w+' ';s.style.animationDelay=i*.45+'s';q.appendChild(s);setTimeout(()=>{s.classList.add('p');burst(14);document.body.animate([{transform:'translate(0)'},{transform:'translate(-6px,4px)'},{transform:'translate(5px,-4px)'},{transform:'translate(0)'}],{duration:250})},i*450)});
+  setTimeout(()=>$('row').classList.add('v'),2400)},5200);
+}
+function dodge(e){e.preventDefault();tries++;const n=$('no');
+ n.style.transform=`translate(${(Math.random()-.5)*200}px,${(Math.random()-.5)*160}px)`;
+ n.textContent=['No','Are you sure? 🥺','Really?','Try YES 😏','Nope, can\'t catch me'][Math.min(tries,4)];
+ $('yes').style.transform=`scale(${1+tries*.18})`}
+$('no').addEventListener('mouseover',dodge);$('no').addEventListener('touchstart',dodge);$('no').addEventListener('click',dodge);
+$('yes').onclick=()=>{show('s3');for(let i=0;i<6;i++)setTimeout(()=>burst(30),i*350);setInterval(heart,120)};
+</script></body></html>
